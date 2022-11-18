@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html ng-app="" ng-controller="myCtrl">
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+<style>
+table, th, td {
+    border: 1px solid blue;
+    border-collapse: collapse;
+    padding:5px;
+}
+table tr:nth-child(odd) {
+  background-color: #f1f1f1;
+}
+table tr:nth-child(even) {
+  background-color: #ffffff;
+}
+</style>
+<body>
+<button ng-click="bacaCSV()">
+Tampilkan data
+</button>
+<br/>
+<br/>
+<div id="divID">
+  <table>
+    <tr ng-repeat="x in data">
+      <td ng-repeat="y in x">{{ y }}</td>
+    </tr>
+  </table>
+</div>
+<div>
+<table>
+</table>
+</div>
+<script>
+function myCtrl($scope, $http) {
+	$scope.bacaCSV = function() {
+		
+		$http.get('Cars.csv').success($scope.processData);
+	};
+
+	$scope.processData = function(allText) {
+		
+		var allTextLines = allText.split(/\r\n|\n/);
+		var headers = allTextLines[0].split(',');
+                      
+		var lines = [];
+
+		for ( var i = 0; i < allTextLines.length; i++) {
+			var data = allTextLines[i].split(',');
+			if (data.length == headers.length) {
+				var tarr = [];
+				for ( var j = 0; j < headers.length; j++) {
+					tarr.push(data[j]);
+				}
+				lines.push(tarr);
+			}
+		}
+		$scope.data = lines;
+	};
+}
+</script>
+
+</body>
+</html>
+
